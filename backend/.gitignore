@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+package-lock.json.bak
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime / build
+dist/
+build/
+tmp/
+coverage/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Uploads (user-generated content shouldn't be versioned)
+uploads/
+public/uploads/
+
+# Debug
+*.pid
+*.seed
+*.pid.lock
+
+# Testing
+coverage/
+.nyc_output/
