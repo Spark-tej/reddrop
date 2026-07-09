@@ -32,6 +32,7 @@ const ALLOWED_ORIGINS = new Set([
 
 connectDB();
 
+
 app.disable("x-powered-by");
 app.set("trust proxy", 1);
 app.use(morgan("dev"));
@@ -62,6 +63,13 @@ app.use(
     optionsSuccessStatus: 200,
   })
 );
+
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    message: "RedDrop Backend API is running 🚀"
+  });
+});
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
