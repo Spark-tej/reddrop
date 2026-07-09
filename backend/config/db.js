@@ -5,7 +5,7 @@ let mongoServer;
 
 const connectDB = async () => {
   try {
-    const preferredUri = process.env.MONGO_URI;
+    const preferredUri = process.env.MONGODB_URI || process.env.MONGO_URI;
     let uri = preferredUri;
 
     if (!uri || uri.includes("127.0.0.1:27017") || uri.includes("localhost:27017")) {

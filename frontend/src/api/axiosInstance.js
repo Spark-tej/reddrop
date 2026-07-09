@@ -2,6 +2,7 @@ import axios from "axios";
 
 // Base URL is pulled from the Vite env file (see .env.example).
 const API_BASE_URL =
+  import.meta.env.VITE_API_URL ||
   import.meta.env.VITE_API_BASE_URL ||
   (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost"
     ? "http://localhost:5000/api"
