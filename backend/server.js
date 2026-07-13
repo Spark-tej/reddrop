@@ -8,12 +8,14 @@ import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import requestRoutes from "./routes/requestRoutes.js";
 import driveRoutes from "./routes/driveRoutes.js";
+import donorRoutes from "./routes/donorRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorHandler.js";
 
 dotenv.config();
 
 const app = express();
-const PORT = Number(process.env.PORT) || 5000;
+// Render provides the port dynamically; fall back to 5000 for local development.
+const PORT = process.env.PORT || 5000;
 const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
 const ALLOWED_ORIGINS = new Set([
   CLIENT_URL,
@@ -34,6 +36,7 @@ connectDB();
 
 
 app.disable("x-powered-by");
+// Trust the Render proxy so secure cookies and forwarded headers work correctly.
 app.set("trust proxy", 1);
 app.use(morgan("dev"));
 app.use(express.json());
@@ -64,10 +67,11 @@ app.use(
   })
 );
 
+// Health check endpoint used by Render and deployment monitoring.
 app.get("/", (req, res) => {
   res.json({
     success: true,
-    message: "RedDrop Backend API is running 🚀"
+    message: "RedDrop Backend API is running"
   });
 });
 
@@ -75,10 +79,28 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/requests", requestRoutes);
 app.use("/api/drives", driveRoutes);
+// Compatibility alias so existing donor-search frontend requests resolve correctly.
+app.use("/api/donors", donorRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`RedDrop backend running on port ${PORT}`);
-});
+const startServer = (port) => {
+  const server = app.listen(port, "0.0.0.0", () => {
+    console.log(`RedDrop backend running on port ${port}`);
+  });
+
+  server.on("error", (error) => {
+    if (error.code === "EADDRINUSE") {
+      const nextPort = Number(port) + 1;
+      console.warn(`Port ${port} is already in use. Retrying on ${nextPort}...`);
+      startServer(nextPort);
+      return;
+    }
+
+    console.error("Server failed to start:", error);
+    process.exit(1);
+  });
+};
+
+startServer(Number(PORT));

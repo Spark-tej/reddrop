@@ -1,6 +1,6 @@
 import axios from "axios";
 
-// Base URL is pulled from the Vite env file (see .env.example).
+// Production uses VITE_API_URL on Render; local development falls back to localhost.
 const API_BASE_URL =
   import.meta.env.VITE_API_URL ||
   import.meta.env.VITE_API_BASE_URL ||

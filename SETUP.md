@@ -77,6 +77,18 @@ npm run dev                # http://localhost:5000
 - A `401` response anywhere triggers an automatic logout + redirect to `/login`.
 - Redux slices (`authSlice`, `bloodRequestSlice`, `donorSlice`) call this instance — point `VITE_API_BASE_URL` at your running backend and the app works end-to-end.
 
-## 6. Git hygiene
+## 6. Deploying to Vercel
+
+This repo deploys the React app from the `frontend/` folder. A `vercel.json` file is included to ensure Vercel runs the frontend build in the correct directory.
+
+1. In Vercel, set the project root to the repository root (`RedDrop/`).
+2. Use these deployment settings:
+   - Build command: `cd frontend && npm install && npm run build`
+   - Output directory: `frontend/dist`
+3. If you want only static hosting, make sure the backend is deployed separately and `VITE_API_BASE_URL` points to that backend URL in `frontend/.env`.
+
+> Note: Vercel will not auto-detect the correct root if it only sees `frontend/package.json` inside a subfolder, so the `vercel.json` file is required for this repo structure.
+
+## 7. Git hygiene
 
 Both `.gitignore` files already exclude `node_modules/`, all `.env*` files, build output (`dist/`), and editor/OS junk — so real secrets never get committed. Only `.env.example` (with placeholder values) should ever be pushed to version control.

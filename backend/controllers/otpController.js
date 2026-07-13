@@ -42,6 +42,8 @@ export const sendRegisterOtp = asyncHandler(async (req, res) => {
 
   const otp = await Otp.create({ email, otpHash, type: "register", expiresAt, resendCount: existing ? existing.resendCount + 1 : 0 });
 
+  console.log(`OTP create attempt for ${email}: id=${otp._id}`);
+
   // send email (best-effort)
   try {
     await sendMail({
