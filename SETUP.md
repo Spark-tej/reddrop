@@ -25,7 +25,7 @@ Copy `backend/.env.example` → `backend/.env` and fill in:
 | `JWT_SECRET` | Long random string used to sign auth tokens |
 | `JWT_EXPIRES_IN` | Token lifetime, e.g. `7d` |
 | `PORT` | Port the Express server listens on (default `5000`) |
-| `CLIENT_URL` | Frontend origin, for CORS (`http://localhost:5173` in dev) |
+| `CLIENT_URL` | Frontend origin, for CORS (`http://localhost:5173` in dev; `https://reddrop-lucw-three.vercel.app` on Render) |
 | `BCRYPT_SALT_ROUNDS` | Password hashing cost factor |
 | `SMTP_*` / `CLOUDINARY_*` | Optional — only needed if you wire up email or image uploads |
 

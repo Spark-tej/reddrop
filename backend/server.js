@@ -17,9 +17,19 @@ const app = express();
 // Render provides the port dynamically; fall back to 5000 for local development.
 const PORT = process.env.PORT || 5000;
 const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
+// CLIENT_URL and FRONTEND_URL may each contain a comma-separated list of origins.
+// This makes it possible to allow the production Vercel deployment without
+// opening the API to every Vercel site.
+const configuredOrigins = [process.env.CLIENT_URL, process.env.FRONTEND_URL]
+  .filter(Boolean)
+  .flatMap((value) => value.split(","))
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 const ALLOWED_ORIGINS = new Set([
-  CLIENT_URL,
-  process.env.FRONTEND_URL,
+  ...configuredOrigins,
+  // Current production deployment. Prefer setting CLIENT_URL on Render so a
+  // future custom domain can be added without changing application code.
+  "https://reddrop-lucw-three.vercel.app",
   "http://localhost:5173",
   "http://127.0.0.1:5173",
   "http://localhost:5174",
