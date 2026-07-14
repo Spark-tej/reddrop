@@ -42,6 +42,12 @@ const ALLOWED_ORIGINS = new Set([
   "http://127.0.0.1:3000",
 ]);
 
+// Vercel creates a different preview hostname for each Git branch/commit.
+// Limit the wildcard to this project's deployment names rather than allowing
+// every *.vercel.app origin.
+const isRedDropVercelDeployment = (origin) =>
+  /^https:\/\/reddrop-lucw(?:-[a-z0-9-]+)?\.vercel\.app$/i.test(origin);
+
 connectDB();
 
 
@@ -62,6 +68,7 @@ app.use(
       const normalizedOrigin = origin.trim();
       if (
         ALLOWED_ORIGINS.has(normalizedOrigin) ||
+        isRedDropVercelDeployment(normalizedOrigin) ||
         /^https:\/\/(.+\.)?onrender\.com$/.test(normalizedOrigin) ||
         /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(normalizedOrigin)
       ) {
