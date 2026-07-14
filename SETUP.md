@@ -27,6 +27,7 @@ Copy `backend/.env.example` → `backend/.env` and fill in:
 | `PORT` | Port the Express server listens on (default `5000`) |
 | `CLIENT_URL` | Frontend origin, for CORS (`http://localhost:5173` in dev; `https://reddrop-lucw-three.vercel.app` on Render) |
 | `BCRYPT_SALT_ROUNDS` | Password hashing cost factor |
+| `OTP_DEMO_MODE` | Set to `true` only for the demo deployment to show the OTP in the verification dialog |
 | `SMTP_*` / `CLOUDINARY_*` | Optional — only needed if you wire up email or image uploads |
 
 Generate a strong JWT secret:
@@ -101,6 +102,7 @@ Set these Render environment variables (do not include quotes):
 | `JWT_SECRET` | A long, random secret |
 | `JWT_EXPIRES_IN` | `7d` |
 | `CLIENT_URL` | Your exact Vercel URL, e.g. `https://your-app.vercel.app` |
+| `OTP_DEMO_MODE` | `true` (demo only; exposes the OTP in the browser) |
 
 Open `https://<your-render-service>.onrender.com/` after deployment. It must return the API health-check JSON before continuing.
 

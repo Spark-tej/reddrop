@@ -11,12 +11,14 @@ export default function ForgotPassword() {
   const [loadingLocal, setLoadingLocal] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [demoOtp, setDemoOtp] = useState(null);
   const dispatch = useDispatch();
 
   const handleSend = async () => {
     setLoadingLocal(true);
     try {
-      await dispatch(sendResetOtp({ email })).unwrap();
+      const response = await dispatch(sendResetOtp({ email })).unwrap();
+      setDemoOtp(response.demoCode || null);
       toast.success("If this email is registered, an OTP was sent");
       setOtpVisible(true);
       setStage(1);
@@ -40,7 +42,8 @@ export default function ForgotPassword() {
 
   const handleResend = async () => {
     try {
-      await dispatch(sendResetOtp({ email })).unwrap();
+      const response = await dispatch(sendResetOtp({ email })).unwrap();
+      setDemoOtp(response.demoCode || null);
       toast.success("OTP resent");
     } catch (err) {
       toast.error(err || "Failed to resend OTP");
@@ -81,7 +84,14 @@ export default function ForgotPassword() {
           </div>
         )}
 
-        <OTPModal email={email} visible={otpVisible} onClose={() => setOtpVisible(false)} onVerify={handleVerify} onResend={handleResend} />
+        <OTPModal
+          email={email}
+          visible={otpVisible}
+          demoCode={demoOtp}
+          onClose={() => setOtpVisible(false)}
+          onVerify={handleVerify}
+          onResend={handleResend}
+        />
       </div>
     </div>
   );

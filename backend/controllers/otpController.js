@@ -50,7 +50,7 @@ export const sendRegisterOtp = asyncHandler(async (req, res) => {
     await sendMail({
       to: email,
       subject: "Your RedDrop registration OTP",
-      text: `Your verification code is ${code}. It expires in 5 minutes.`,
+      text: `Your verification code is ${code}. It expires in 1 minutes.`,
       html: `<p>Your RedDrop verification code is <strong>${code}</strong>. It expires in 5 minutes.</p>`,
     });
   } catch (err) {
@@ -149,7 +149,12 @@ export const sendResetOtp = asyncHandler(async (req, res) => {
     console.warn("Email send failed", err.message);
   }
 
-  res.json({ message: "OTP sent" });
+  res.json({
+    message: "OTP sent",
+    // Demo-only convenience for presenting the code in the browser. Keep
+    // OTP_DEMO_MODE disabled for a real public application.
+    ...(isOtpDemoMode() ? { demoCode: code } : {}),
+  });
 });
 
 export const verifyResetOtp = asyncHandler(async (req, res) => {
