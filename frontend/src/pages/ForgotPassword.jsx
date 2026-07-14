@@ -65,7 +65,7 @@ export default function ForgotPassword() {
         <h2 className="text-2xl font-bold">Forgot Password</h2>
         {stage === 0 && (
           <div className="card mt-4">
-            <label className="label">Enter your registered email</label>
+            <label className="label">Enter your Registered email</label>
             <input className="input-field" value={email} onChange={(e) => setEmail(e.target.value)} />
             <button onClick={handleSend} disabled={loadingLocal} className="btn-primary mt-4">Send OTP</button>
           </div>

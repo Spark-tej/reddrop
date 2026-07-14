@@ -83,7 +83,7 @@ export default function Register() {
       setDemoOtp(response.demoCode || null);
       toast.success("OTP resent");
     } catch (err) {
-      toast.error(err || "Failed to resend OTP");
+      toast.error(err || "Failed to ");
     }
   };
 
