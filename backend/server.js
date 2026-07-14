@@ -43,10 +43,10 @@ const ALLOWED_ORIGINS = new Set([
 ]);
 
 // Vercel creates a different preview hostname for each Git branch/commit.
-// Limit the wildcard to this project's deployment names rather than allowing
-// every *.vercel.app origin.
+// Accept only RedDrop deployment names, including team-scoped preview URLs
+// such as reddrop-<deployment>-maddirala-sris-projects.vercel.app.
 const isRedDropVercelDeployment = (origin) =>
-  /^https:\/\/reddrop-lucw(?:-[a-z0-9-]+)?\.vercel\.app$/i.test(origin);
+  /^https:\/\/reddrop(?:-[a-z0-9]+)*(?:-maddirala-sris-projects)?\.vercel\.app$/i.test(origin);
 
 connectDB();
 
