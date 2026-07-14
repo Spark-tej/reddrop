@@ -10,6 +10,7 @@ const OTP_TTL_MS = 5 * 60 * 1000; // 5 minutes
 const RESEND_DELAY_MS = 60 * 1000; // 60 seconds
 const MAX_RESEND = 3;
 const MAX_ATTEMPTS = 5;
+const isOtpDemoMode = () => process.env.OTP_DEMO_MODE === "true";
 
 const generateOtpCode = () => Math.floor(100000 + Math.random() * 900000).toString();
 
@@ -56,7 +57,12 @@ export const sendRegisterOtp = asyncHandler(async (req, res) => {
     console.warn("Email send failed", err.message);
   }
 
-  res.json({ message: "OTP sent" });
+  res.json({
+    message: "OTP sent",
+    // Never enable OTP_DEMO_MODE for a real public deployment: returning an
+    // OTP in an API response defeats email verification.
+    ...(isOtpDemoMode() ? { demoCode: code } : {}),
+  });
 });
 
 export const verifyRegisterOtp = asyncHandler(async (req, res) => {

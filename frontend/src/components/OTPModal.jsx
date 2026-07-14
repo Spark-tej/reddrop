@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
+import { AlertTriangle } from "lucide-react";
 import toast from "react-hot-toast";
 
-export default function OTPModal({ email, visible, onClose, onVerify, onResend }) {
+export default function OTPModal({ email, visible, demoCode, onClose, onVerify, onResend }) {
   const [code, setCode] = useState("");
   const [seconds, setSeconds] = useState(300); // 5 minutes
   const [resendAvailable, setResendAvailable] = useState(false);
@@ -46,15 +47,22 @@ export default function OTPModal({ email, visible, onClose, onVerify, onResend }
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-lg">
-        <h3 className="text-lg font-semibold">Enter verification code</h3>
-        <p className="mt-2 text-sm text-slate-500">We sent a 6-digit code to {email}.</p>
+        <h3 className="text-lg font-semibold text-slate-900">Verify your email</h3>
+        <p className="mt-2 text-sm text-slate-500">We emailed a verification code to <span className="font-semibold text-slate-700">{email}</span>. Please check your inbox.</p>
+
+        {demoCode && (
+          <div className="mt-4 flex items-center gap-3 rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            <AlertTriangle className="h-5 w-5 shrink-0 text-amber-500" />
+            <p><span className="font-bold">[DEMO MODE]</span> For test purposes, your verification code is: <span className="font-bold">{demoCode}</span></p>
+          </div>
+        )}
 
         <div className="mt-4">
           <input
             value={code}
             onChange={(e) => setCode(e.target.value.replace(/[^0-9]/g, "").slice(0, 6))}
             className="input-field w-full text-center text-xl tracking-wider"
-            placeholder="______"
+            placeholder="6-Digit Verification Code *"
           />
         </div>
 

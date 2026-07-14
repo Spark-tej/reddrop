@@ -51,9 +51,11 @@ export default function Register() {
     };
     // start OTP flow
     setPendingPayload(payload);
+    setDemoOtp(null);
     setOtpVisible(true);
     try {
-      await dispatch(sendRegisterOtp({ email: form.email })).unwrap();
+      const response = await dispatch(sendRegisterOtp({ email: form.email })).unwrap();
+      setDemoOtp(response.demoCode || null);
       toast.success("OTP sent to your email");
     } catch (err) {
       toast.error(err || "Failed to send OTP");
@@ -63,6 +65,7 @@ export default function Register() {
 
   const [pendingPayload, setPendingPayload] = useState(null);
   const [otpVisible, setOtpVisible] = useState(false);
+  const [demoOtp, setDemoOtp] = useState(null);
 
   const handleVerify = async (code) => {
     try {
@@ -76,7 +79,8 @@ export default function Register() {
 
   const handleResend = async () => {
     try {
-      await dispatch(sendRegisterOtp({ email: form.email })).unwrap();
+      const response = await dispatch(sendRegisterOtp({ email: form.email })).unwrap();
+      setDemoOtp(response.demoCode || null);
       toast.success("OTP resent");
     } catch (err) {
       toast.error(err || "Failed to resend OTP");
@@ -157,7 +161,14 @@ export default function Register() {
           </button>
         </form>
 
-        <OTPModal email={form.email} visible={otpVisible} onClose={() => setOtpVisible(false)} onVerify={handleVerify} onResend={handleResend} />
+        <OTPModal
+          email={form.email}
+          visible={otpVisible}
+          demoCode={demoOtp}
+          onClose={() => setOtpVisible(false)}
+          onVerify={handleVerify}
+          onResend={handleResend}
+        />
 
         <p className="mt-5 text-center text-sm text-slate-500">
           Already registered?{" "}
