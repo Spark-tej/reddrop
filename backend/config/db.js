@@ -8,6 +8,13 @@ const connectDB = async () => {
     const preferredUri = process.env.MONGODB_URI || process.env.MONGO_URI;
     let uri = preferredUri;
 
+    // A temporary in-memory database is useful while developing locally, but
+    // it is not a production database. On Render it would lose all data on a
+    // restart and can fail while trying to download its MongoDB binary.
+    if (process.env.NODE_ENV === "production" && !uri) {
+      throw new Error("MONGODB_URI (or MONGO_URI) must be configured in production");
+    }
+
     if (!uri || uri.includes("127.0.0.1:27017") || uri.includes("localhost:27017")) {
       try {
         if (!uri) {

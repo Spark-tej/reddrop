@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "RedDrop backend API for blood donation and request management",
   "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

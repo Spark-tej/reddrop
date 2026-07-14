@@ -79,15 +79,44 @@ npm run dev                # http://localhost:5000
 
 ## 6. Deploying to Vercel
 
-This repo deploys the React app from the `frontend/` folder. A `vercel.json` file is included to ensure Vercel runs the frontend build in the correct directory.
+Deploy the backend on Render before deploying the frontend. The browser must be given the public Render API URL during the Vercel build; localhost URLs only work on your computer.
 
-1. In Vercel, set the project root to the repository root (`RedDrop/`).
-2. Use these deployment settings:
-   - Build command: `cd frontend && npm install && npm run build`
-   - Output directory: `frontend/dist`
-3. If you want only static hosting, make sure the backend is deployed separately and `VITE_API_BASE_URL` points to that backend URL in `frontend/.env`.
+### Render (API)
 
-> Note: Vercel will not auto-detect the correct root if it only sees `frontend/package.json` inside a subfolder, so the `vercel.json` file is required for this repo structure.
+Create a **Web Service** from this repository. The included `render.yaml` supplies the commands, or enter these values manually:
+
+| Setting | Value |
+| --- | --- |
+| Root directory | `backend` |
+| Build command | `npm ci` |
+| Start command | `npm start` |
+| Health check path | `/` |
+
+Set these Render environment variables (do not include quotes):
+
+| Variable | Production value |
+| --- | --- |
+| `NODE_ENV` | `production` |
+| `MONGODB_URI` | Your MongoDB Atlas connection string |
+| `JWT_SECRET` | A long, random secret |
+| `JWT_EXPIRES_IN` | `7d` |
+| `CLIENT_URL` | Your exact Vercel URL, e.g. `https://your-app.vercel.app` |
+
+Open `https://<your-render-service>.onrender.com/` after deployment. It must return the API health-check JSON before continuing.
+
+### Vercel (frontend)
+
+Import this repository with its root directory set to `RedDrop/` (the repository root). `vercel.json` runs the Vite build from `frontend/` and serves React routes correctly.
+
+In **Settings → Environment Variables**, add this for **Production** and redeploy:
+
+| Variable | Value |
+| --- | --- |
+| `VITE_API_URL` | `https://<your-render-service>.onrender.com/api` |
+
+`VITE_API_URL` is compiled into the Vite bundle, so changing it requires a new Vercel deployment. Do not use `localhost`, and include the `/api` suffix.
+
+If the API reports a CORS error, compare `CLIENT_URL` with the browser address exactly—protocol and any custom domain must match. Multiple allowed frontend URLs can be provided as a comma-separated `CLIENT_URL` or `FRONTEND_URL` value.
 
 ## 7. Git hygiene
 
