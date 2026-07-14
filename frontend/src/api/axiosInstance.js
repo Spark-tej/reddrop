@@ -1,12 +1,18 @@
 import axios from "axios";
 
-// Production uses VITE_API_URL on Render; local development falls back to localhost.
+const isLocalDevelopment =
+  window.location.hostname === "127.0.0.1" ||
+  window.location.hostname === "localhost";
+
+// VITE_API_URL is the deployment-time override. The Render URL is retained as
+// a production fallback so a missing Vercel environment variable never sends
+// browser requests to Vercel's own /api route.
 const API_BASE_URL =
   import.meta.env.VITE_API_URL ||
   import.meta.env.VITE_API_BASE_URL ||
-  (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost"
+  (isLocalDevelopment
     ? "http://localhost:5000/api"
-    : "/api");
+    : "https://reddrop-yr8u.onrender.com/api");
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,

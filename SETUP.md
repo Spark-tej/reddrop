@@ -112,7 +112,7 @@ In **Settings → Environment Variables**, add this for **Production** and redep
 
 | Variable | Value |
 | --- | --- |
-| `VITE_API_URL` | `https://<your-render-service>.onrender.com/api` |
+| `VITE_API_URL` | `https://reddrop-yr8u.onrender.com/api` |
 
 `VITE_API_URL` is compiled into the Vite bundle, so changing it requires a new Vercel deployment. Do not use `localhost`, and include the `/api` suffix.
 
