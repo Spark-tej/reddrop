@@ -4,16 +4,16 @@ import toast from "react-hot-toast";
 
 export default function OTPModal({ email, visible, demoCode, onClose, onVerify, onResend }) {
   const [code, setCode] = useState("");
-  const [seconds, setSeconds] = useState(300); // 5 minutes
+  const [seconds, setSeconds] = useState(60); // 1 minute
   const [resendAvailable, setResendAvailable] = useState(false);
-  const [resendTimer, setResendTimer] = useState(60);
+  const [resendTimer, setResendTimer] = useState(15);
 
   useEffect(() => {
     if (!visible) return;
     setCode("");
-    setSeconds(300);
+    setSeconds(60);
     setResendAvailable(false);
-    setResendTimer(60);
+    setResendTimer(15);
   }, [visible]);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function OTPModal({ email, visible, demoCode, onClose, onVerify, 
 
   const handleResend = async () => {
     if (!resendAvailable) return;
-    setResendTimer(60);
+    setResendTimer(15);
     setResendAvailable(false);
     await onResend();
   };

@@ -6,8 +6,8 @@ import Otp from "../models/Otp.js";
 import User from "../models/User.js";
 import { sendMail } from "../utils/mailer.js";
 
-const OTP_TTL_MS = 5 * 60 * 1000; // 5 minutes
-const RESEND_DELAY_MS = 60 * 1000; // 60 seconds
+const OTP_TTL_MS = 60 * 1000; // 1 minute
+const RESEND_DELAY_MS = 15 * 1000; // 15 seconds
 const MAX_RESEND = 3;
 const MAX_ATTEMPTS = 5;
 const isOtpDemoMode = () => process.env.OTP_DEMO_MODE === "true";
@@ -50,8 +50,8 @@ export const sendRegisterOtp = asyncHandler(async (req, res) => {
     await sendMail({
       to: email,
       subject: "Your RedDrop registration OTP",
-      text: `Your verification code is ${code}. It expires in 1 minutes.`,
-      html: `<p>Your RedDrop verification code is <strong>${code}</strong>. It expires in 5 minutes.</p>`,
+      text: `Your verification code is ${code}. It expires in 1 minute.`,
+      html: `<p>Your RedDrop verification code is <strong>${code}</strong>. It expires in 1 minute.</p>`,
     });
   } catch (err) {
     console.warn("Email send failed", err.message);
@@ -142,8 +142,8 @@ export const sendResetOtp = asyncHandler(async (req, res) => {
     await sendMail({
       to: email,
       subject: "Your RedDrop password reset code",
-      text: `Your password reset code is ${code}. It expires in 5 minutes.`,
-      html: `<p>Your password reset code is <strong>${code}</strong>. It expires in 5 minutes.</p>`,
+      text: `Your password reset code is ${code}. It expires in 1 minute.`,
+      html: `<p>Your password reset code is <strong>${code}</strong>. It expires in 1 minute.</p>`,
     });
   } catch (err) {
     console.warn("Email send failed", err.message);
