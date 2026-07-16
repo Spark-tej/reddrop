@@ -47,6 +47,13 @@ export const sendRegisterOtp = asyncHandler(async (req, res) => {
 
   // send email (best-effort)
   try {
+    res.json({
+      message: "OTP sent",
+      // Show only the first code in demo mode. Any resend is delivered by
+      // email only, so the normal delivery flow can be tested afterwards.
+      ...(isOtpDemoMode() && !existing ? { demoCode: code } : {}),
+    });
+
     await sendMail({
       to: email,
       subject: "Your RedDrop registration OTP",
@@ -57,12 +64,7 @@ export const sendRegisterOtp = asyncHandler(async (req, res) => {
     console.warn("Email send failed", err.message);
   }
 
-  res.json({
-    message: "OTP sent",
-    // Never enable OTP_DEMO_MODE for a real public deployment: returning an
-    // OTP in an API response defeats email verification.
-    ...(isOtpDemoMode() ? { demoCode: code } : {}),
-  });
+
 });
 
 export const verifyRegisterOtp = asyncHandler(async (req, res) => {
@@ -129,6 +131,15 @@ export const sendResetOtp = asyncHandler(async (req, res) => {
     return res.json({ message: "OTP sent" });
   }
 
+  // Determine whether this is the first active reset code. A resend creates
+  // a new code but does not return it in demo mode.
+  const existing = await Otp.findOne({
+    email,
+    type: "reset",
+    used: false,
+    expiresAt: { $gte: new Date() },
+  }).sort({ createdAt: -1 });
+
   // invalidate previous reset OTPs
   await Otp.updateMany({ email, type: "reset", used: false }, { used: true });
 
@@ -151,9 +162,8 @@ export const sendResetOtp = asyncHandler(async (req, res) => {
 
   res.json({
     message: "OTP sent",
-    // Demo-only convenience for presenting the code in the browser. Keep
-    // OTP_DEMO_MODE disabled for a real public application.
-    ...(isOtpDemoMode() ? { demoCode: code } : {}),
+    // First code only in demo mode; later requests are email-only.
+    ...(isOtpDemoMode() && !existing ? { demoCode: code } : {}),
   });
 });
 

@@ -4,6 +4,9 @@ import bcrypt from "bcryptjs";
 const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
+    // Optional so existing email-based registrations remain valid. Test and
+    // future registrations can still use a unique username.
+    username: { type: String, unique: true, sparse: true, trim: true, lowercase: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     password: { type: String, required: true, minlength: 6 },
     bloodType: { type: String, required: true, trim: true },
